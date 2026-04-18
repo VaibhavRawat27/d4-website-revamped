@@ -45,6 +45,7 @@ const mapData = {
   speakers: [
     { lat: 52.2297, lng: 21.0122, city: "Katowice", country: "Poland", name: "Kasia Biernat-Kluba", role: "Principal Software Engineer", topic: "Beyond the Browser: Angular Meets Generative AI" },
     { lat: 40.4168, lng: -3.7038, city: "Madrid", country: "Spain", name: "Victoria Clotet", role: "Founder & CEO of Influsfera", topic: "AI as Your CTO Co‑Founder: Build Smarter, Not Harder" },
+    { lat: 28.5355, lng: 77.3910, city: "Noida", country: "India", name: "Pranav Kumar Verma", role: "Technical Lead at Wipro", topic: "Project IDX" },
     { lat: 28.6139, lng: 77.209, city: "Delhi", country: "India", name: "Dhruv Kumar", role: "Software Engineer", topic: "Kubernetes at Scale" },
     { lat: 28.6139, lng: 77.209, city: "Delhi", country: "India", name: "Chhavi Garg", role: "Founder & CEO of BharatXR", topic: "Build With AR" },
     { lat: 30.7333, lng: 76.7794, city: "Chandigarh", country: "India", name: "Simar Preet Singh", role: "Frontend Developer", topic: "Building SaaS Products" },
@@ -54,6 +55,15 @@ const mapData = {
     { lat: 31.254, lng: 75.7053, city: "Jalandhar", country: "India", name: "Amanpreet Kaur", role: "Android Developer", topic: "Mobile Development" },
     { lat: 30.901, lng: 75.8573, city: "Ludhiana", country: "India", name: "Gaurav Madaan", role: "Co-Founder & CTO at NIWI.AI", topic: "Generative AI" },
     { lat: 31.254, lng: 75.7053, city: "Jalandhar", country: "India", name: "Loveleen Kaur", role: "Android Developer", topic: "Introduction to Android Development" },
+    { lat: 28.6139, lng: 77.209, city: "Delhi", country: "India", name: "Chhavi Garg", role: "Founder & CEO of BharatXR", topic: "Build With AR" },
+    { lat: 17.3850, lng: 78.4867, city: "Hyderabad", country: "India", name: "Jaskeerat Singh", role: "Software Engineer", topic: "Getting Started With GenAI" },
+    { lat: 12.9716, lng: 77.5946, city: "Bangalore", country: "India", name: "Shantam Sultania", role: "Director, Morgan Stanley India", topic: "GenAI Applications with Specs & AI" },
+    { lat: 12.9716, lng: 77.5946, city: "Bangalore", country: "India", name: "Harsh Badwaik", role: "Software Engineer at Mercari", topic: "Multi-Agent Systems with AIpex" },
+    { lat: 12.9716, lng: 77.5946, city: "Bangalore", country: "India", name: "Aditya Thakur", role: "Software Engineer at Scapia", topic: "Cross-platform AI Experiences with Flutter & Dart" },
+    { lat: 12.9716, lng: 77.5946, city: "Bangalore", country: "India", name: "Darshan Madhu", role: "Technical Product Manager (AI) at Mercari", topic: "From Prompts to Products: Turning LLMs into Real-World Tools" },
+    { lat: 12.9716, lng: 77.5946, city: "Bangalore", country: "India", name: "Nishtha Saraswat", role: "SDE", topic: "Opening Keynote Speaker" },
+    { lat: 28.4595, lng: 77.0266, city: "Gurugram", country: "India", name: "Ashwani Kumar", role: "CTI Analyst", topic: "Cybersecurity in the Age of AI" },
+
   ],
   leads: [
     { lat: 30.6869, lng: 76.6813, city: "Chandigarh", country: "India", name: "Bhumika Varshney", role: "Campus Lead", org: "CGC University" },
@@ -71,17 +81,13 @@ const mapData = {
     { lat: 30.7333, lng: 76.7794, city: "Chandigarh", state: "Chandigarh", country: "India", name: "GDG TechShow Chandigarh", date: "Feb 18, 2023", attendees: "100+" },
     { lat: 30.7046, lng: 76.7179, city: "Mohali", state: "Punjab", country: "India", name: "InnoSprint", date: "Oct 6-7, 2024", attendees: "400+" },
     { lat: 30.7333, lng: 76.7794, city: "Chandigarh", state: "Chandigarh", country: "India", name: "Hack-N-Win", date: "Mar 2-3, 2024", attendees: "500+" },
-    { lat: 30.7333, lng: 76.7794, city: "Chandigarh", state: "Chandigarh", country: "India", name: "Hack-N-Win 2.0", date: "Mar 1-2, 2024", attendees: "100+" },
+    { lat: 30.7333, lng: 76.7794, city: "Chandigarh", state: "Chandigarh", country: "India", name: "Hack-N-Win 2.0", date: "Mar 1-2, 2024", attendees: "700+" },
+    { lat: 30.7333, lng: 76.7794, city: "Chandigarh", state: "Chandigarh", country: "India", name: "Hack-N-Win 3.0", date: "Mar 7-9, 2024", attendees: "1700+" },
   ],
 };
 
 type FilterType = "all" | "speakers" | "leads" | "events";
 
-/**
- * Compute popup position relative to the map container.
- * Opens above the marker when space allows, otherwise below.
- * Clamps left/right so the card never leaves the container.
- */
 function calcPopupPos(
   anchorX: number,
   anchorY: number,
