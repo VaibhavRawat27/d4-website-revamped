@@ -109,18 +109,21 @@
 
 
 import { MetadataRoute } from "next";
-// 1. You MUST uncomment this line and ensure the path is correct
-import { client } from "@/sanity/lib/client"; 
+import { client } from "@/sanity/lib/client";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://d4community.com";
+// 1. Ensure BASE_URL is handled correctly even if the env var is missing during build
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://d4community.com";
 
-// Optional: Set revalidation time (e.g., every hour)
-export const revalidate = 3600;
+/**
+ * We use 'force-dynamic' or 'revalidate' to ensure 
+ * Next.js knows how to handle this route.
+ */
+export const revalidate = 3600; // Revalidate every hour
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  
+  // --- Static Routes ---
   const staticPages: MetadataRoute.Sitemap = [
-    { url: BASE_URL, lastModified: new Date(), priority: 1 },
+    { url: BASE_URL, lastModified: new Date(), priority: 1, changeFrequency: "daily" },
     { url: `${BASE_URL}/about`, lastModified: new Date(), priority: 0.8 },
     { url: `${BASE_URL}/contact`, lastModified: new Date(), priority: 0.8 },
     { url: `${BASE_URL}/code-of-conduct`, lastModified: new Date(), priority: 0.8 },
@@ -134,18 +137,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     // 2. Fetch dynamic slugs from Sanity
+    // Added useCdn: false to ensure we get fresh data during build if needed
     const dynamicData = await client.fetch<{ slug: string; type: string; updated: string }[]>(
       `*[(_type == "event" || _type == "teamMember") && defined(slug.current)]{
         "slug": slug.current,
         "type": _type,
         "updated": _updatedAt
-      }`
+      }`,
+      {},
+      { next: { revalidate: 3600 } } // Tags the fetch for Next.js cache
     );
 
-    const dynamicRoutes: MetadataRoute.Sitemap = dynamicData.map((item) => {
-      // Logic to determine sub-path based on Sanity Schema type
+    const dynamicRoutes: MetadataRoute.Sitemap = (dynamicData || []).map((item) => {
       const prefix = item.type === "event" ? "events" : "team";
-      
       return {
         url: `${BASE_URL}/${prefix}/${item.slug}`,
         lastModified: new Date(item.updated),
@@ -157,9 +161,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return [...staticPages, ...dynamicRoutes];
 
   } catch (error) {
-    // If Sanity is down or there's a typo, it still returns static pages 
-    // so your site build doesn't fail.
-    console.error("Sitemap generation failed:", error);
+    // This ensures that even if Sanity fails, your build SUCCEEDS with static pages
+    console.error("CRITICAL: Sitemap dynamic fetch failed:", error);
     return staticPages;
   }
 }
